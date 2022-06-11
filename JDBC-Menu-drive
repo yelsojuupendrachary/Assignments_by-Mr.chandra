@@ -1,0 +1,132 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class CrudEx {
+	 static final String DB_URL = "jdbc:mysql://localhost:3306/Hexaware";
+	   static final String USER = "root";
+	   static final String PASS = "630134";
+	public static void main(String args[]) throws Exception,SQLException
+	{
+		         //registering the driver
+		         Class.forName("com.mysql.cj.jdbc.Driver");
+		         //Getting the connection
+		         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		         //Creating statement object
+		         Statement stmt = conn.createStatement();
+	             Scanner scanner = new Scanner(System.in);
+				 int choice,fd;
+		        //Creating infinite while loop
+		         while(true) {
+		 
+		         //Creating menu
+		             System.out.println("select options from below menu:");
+		             System.out.println("press 1 to select data\npress 2 to insert data\npress 3 to Update data\npress 4 to delete\npress 5 to Exit5");
+		             choice=scanner.nextInt();
+		             switch(choice)
+		            {
+		            case 1: 
+		            	System.out.println("Select...\n");
+		            	ResultSet rs=stmt.executeQuery("select * from Trainees");
+		            	while(rs.next())
+		            	{
+		            		System.out.println(rs.getInt(1));
+		            		System.out.println(rs.getString(2));
+		            		System.out.println(rs.getString(3));
+		            		System.out.println();
+		            	}
+		            	  rs.close();
+		            break;
+		            	
+		            case 2:
+		            	System.out.println("***You Choosed Insert***");
+		                int id;
+		            	String name,branch;
+	                	System.out.println("Enter the Trainee_id: ");
+		            	id=scanner.nextInt();
+		            	System.out.println("Enter the Trainee_name: ");
+		            	name=scanner.next();
+                        System.out.println("Enter the Trainee_Branch: ");
+		            	branch=scanner.next();
+	            	
+		            	PreparedStatement p=conn.prepareStatement("insert into Trainees values(?,?,?)");  
+		            	p.setInt(1,id);//1 specifies the first parameter in the query  
+		            	p.setString(2,name);
+		            	p.setString(3,branch);
+		            	int i=p.executeUpdate();  
+		            	System.out.println(i+" records inserted");  
+		            	System.out.println("Successfully Inserted");
+		            	break;
+		            case 3:
+		            	System.out.println("You selected Update***");
+		            	
+		                System.out.println("press 1 to Update EmpId\npress 2 to Update Name\npress 3 to Update Branch");
+		                  
+		                fd=scanner.nextInt();
+				             switch(fd)
+				            {
+				            case 1: 
+						      
+					              System.out.println("Enter the id of the trainee? ");
+						          int eid=scanner.nextInt();
+					              System.out.println("Enter the update Id  value? ");
+					              int val=scanner.nextInt();
+                                  PreparedStatement p1=conn.prepareStatement("update Trainees set EmpId = (?) where EmpId = (?)");  
+					               p1.setInt(1,val);
+		            	           p1.setInt(2,eid);
+		            	           p1.executeUpdate();  
+		                    	   System.out.println("Successfully Updated EmId");
+		            	           break;
+				            case 2: 
+							      
+					              System.out.println("Enter the id of the trainee? ");
+						          int tid=scanner.nextInt();
+					              System.out.println("Enter the updated Name value? ");
+					              String tnm=scanner.next();
+                                    PreparedStatement p2=conn.prepareStatement("update Trainees set Name = (?) where EmpId = (?)");  
+					               p2.setString(1,tnm);
+		            	           p2.setInt(2,tid);
+		            	           p2.executeUpdate();  
+		                           System.out.println("**Successfully Updated Name**");
+		            	           break; 
+				            case 3: 
+							      
+					              System.out.println("Enter the id of the trainee: ");
+						          int tid1=scanner.nextInt();
+					              System.out.println("Enter the updated Branch value: ");
+					              String tnm1=scanner.next();
+        			               PreparedStatement p3=conn.prepareStatement("update Trainees set Branch = (?) where EmpId = (?)");  
+					               p3.setString(1,tnm1);
+		            	           p3.setInt(2,tid1);
+		            	           p3.executeUpdate();  
+		            	
+		            	           System.out.println("**Successfully Updated Branch**");
+		            	           break; 
+				            }
+                	break;
+					    
+		            case 4:
+		            	System.out.println("***You selected Delete***");
+		             	System.out.println("Enter the id of the Trainee: ");
+						int empid=scanner.nextInt();
+	                    PreparedStatement p2=conn.prepareStatement("Delete from Trainees where EmpId=(?) ");  
+	                     p2.setInt(1,empid);
+			             p2.executeUpdate();  
+			             System.out.println("**Successfully Deleted**");
+		            	break;
+		            case 5:
+		            	System.out.println("You Are Exited");
+		            	System.exit(0);
+		            	break;
+		            default:
+		            	System.out.println("*** You Choosed Wrong Option***");
+		            }
+                //stmt.close();
+                //conn.close();
+		          }}}      
+		            	
+		            
